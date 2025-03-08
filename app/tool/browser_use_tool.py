@@ -8,9 +8,20 @@ from browser_use.browser.context import BrowserContext
 from browser_use.dom.service import DomService
 from pydantic import Field, field_validator
 from pydantic_core.core_schema import ValidationInfo
-
 from app.tool.base import BaseTool, ToolResult
 
+# 与web浏览器交互以执行各种操作，如导航、元素交、内容提取和标签管理。支持的操作包括:
+# - 'navigate'：访问特定URL
+# - 'click'：通过索引点击元素
+# - 'input_text'：向元素输入文本
+# - 'screenshot'：捕获屏幕截图
+# - 'get_html'：获取页面HTML内容
+# - 'execute_js'：执行JavaScript代码
+# - 'scroll'：滚动页面
+# - 'switch_tab'：切换到特定标签页
+# - 'new_tab'：打开新标签页
+# - 'close_tab'：关闭当前标签页
+# - 'refresh'：刷新当前页面
 
 _BROWSER_DESCRIPTION = """
 Interact with a web browser to perform various actions such as navigation, element interaction,
@@ -28,10 +39,13 @@ content extraction, and tab management. Supported actions include:
 - 'refresh': Refresh the current page
 """
 
-
+# 定义了 BrowserUseTool ，继承 BaseTool
 class BrowserUseTool(BaseTool):
+    # 名字
     name: str = "browser_use"
+    # 描述
     description: str = _BROWSER_DESCRIPTION
+    # 参数，字典
     parameters: dict = {
         "type": "object",
         "properties": {
@@ -51,19 +65,24 @@ class BrowserUseTool(BaseTool):
                     "refresh",
                 ],
                 "description": "The browser action to perform",
+                # 执行的游览器操作
             },
             "url": {
                 "type": "string",
                 "description": "URL for 'navigate' or 'new_tab' actions",
+                # 用于'navigate'或'new_tab'操作的URL
             },
             "index": {
                 "type": "integer",
                 "description": "Element index for 'click' or 'input_text' actions",
+                # 用于'click'或'input_text'操作的元素索引
             },
             "text": {"type": "string", "description": "Text for 'input_text' action"},
+            # 用于'input_text'操作的文本
             "script": {
                 "type": "string",
                 "description": "JavaScript code for 'execute_js' action",
+                # 用于'execute_js'操作的JavaScript代码
             },
             "scroll_amount": {
                 "type": "integer",
