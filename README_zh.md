@@ -20,8 +20,7 @@ Manus 非常棒，但 OpenManus 无需邀请码即可实现任何创意 🛫！
 
 <video src="https://private-user-images.githubusercontent.com/61239030/420168772-6dcfd0d2-9142-45d9-b74e-d10aa75073c6.mp4?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEzMTgwNTksIm5iZiI6MTc0MTMxNzc1OSwicGF0aCI6Ii82MTIzOTAzMC80MjAxNjg3NzItNmRjZmQwZDItOTE0Mi00NWQ5LWI3NGUtZDEwYWE3NTA3M2M2Lm1wND9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMDclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzA3VDAzMjIzOVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTdiZjFkNjlmYWNjMmEzOTliM2Y3M2VlYjgyNDRlZDJmOWE3NWZhZjE1MzhiZWY4YmQ3NjdkNTYwYTU5ZDA2MzYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.UuHQCgWYkh0OQq9qsUWqGsUbhG3i9jcZDAMeHjLt5T4" data-canonical-src="https://private-user-images.githubusercontent.com/61239030/420168772-6dcfd0d2-9142-45d9-b74e-d10aa75073c6.mp4?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDEzMTgwNTksIm5iZiI6MTc0MTMxNzc1OSwicGF0aCI6Ii82MTIzOTAzMC80MjAxNjg3NzItNmRjZmQwZDItOTE0Mi00NWQ5LWI3NGUtZDEwYWE3NTA3M2M2Lm1wND9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMDclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzA3VDAzMjIzOVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTdiZjFkNjlmYWNjMmEzOTliM2Y3M2VlYjgyNDRlZDJmOWE3NWZhZjE1MzhiZWY4YmQ3NjdkNTYwYTU5ZDA2MzYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.UuHQCgWYkh0OQq9qsUWqGsUbhG3i9jcZDAMeHjLt5T4" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px"></video>
 
-## 安装指南
-
+## conda 安装指南
 1. 创建新的 conda 环境：
 
 ```bash
@@ -42,8 +41,31 @@ cd OpenManus
 pip install -r requirements.txt
 ```
 
-## 配置说明
+## win venv 安装指南
+1. 克隆仓库：
 
+```bash
+git clone https://github.com/mannaandpoem/OpenManus.git
+cd OpenManus
+```
+
+2. 创建新的 venv 环境：
+
+```bash
+python -m venv venv
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+.\venv\Scripts\Activate.ps1
+
+```
+
+3. 安装依赖：
+
+```bash
+python.exe -m pip install --upgrade pip
+pip install -r requirements.txt 
+```
+
+## 配置说明
 OpenManus 需要配置使用的 LLM API，请按以下步骤设置：
 
 1. 在 `config` 目录创建 `config.toml` 文件（可从示例复制）：
@@ -52,23 +74,45 @@ OpenManus 需要配置使用的 LLM API，请按以下步骤设置：
 cp config/config.example.toml config/config.toml
 ```
 
-2. 编辑 `config/config.toml` 添加 API 密钥和自定义设置：
+2. 编辑 `config/config.toml` 
+   - 外网添加 API 密钥和自定义设置：
 
-```toml
-# 全局 LLM 配置
-[llm]
-model = "gpt-4o"
-base_url = "https://api.openai.com/v1"
-api_key = "sk-..."  # 替换为真实 API 密钥
-max_tokens = 4096
-temperature = 0.0
+       ```toml
+       # 全局 LLM 配置
+       ## 工具模型
+       [llm]
+       model = "gpt-4o"
+       base_url = "https://api.openai.com/v1"
+       api_key = "sk-..."  # 替换为真实 API 密钥
+       max_tokens = 4096
+       temperature = 0.0
 
-# 可选特定 LLM 模型配置
-[llm.vision]
-model = "gpt-4o"
-base_url = "https://api.openai.com/v1"
-api_key = "sk-..."  # 替换为真实 API 密钥
-```
+       # 多模态模型
+       [llm.vision]
+       model = "gpt-4o"
+       base_url = "https://api.openai.com/v1"
+       api_key = "sk-..."  # 替换为真实 API 密钥
+       ```
+   - 内网 ollama 模型
+   
+        ```
+        # Global LLM configuration
+        [llm] #OLLAMA:
+        api_type = 'ollama'
+        model = "qwen2.5:7b-instruct-fp16" # 模型需要支持工具使用
+        base_url = "http://localhost:11434/v1"
+        max_tokens = 4096
+        temperature = 0.0
+        api_key = "ollama"
+
+        [llm.vision] #OLLAMA VISION:
+        api_type = 'ollama'
+        model = "llava:7b-v1.6-mistral-q4_0" # 或你在一个名为Ollama的任何其他多模态模型中使用的 supports vision
+        base_url = "http://localhost:11434/v1"
+        max_tokens = 4096
+        temperature = 0.0
+        api_key = "ollama"
+        ```
 
 ## 快速启动
 一行命令运行 OpenManus：

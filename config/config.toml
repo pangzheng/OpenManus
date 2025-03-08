@@ -1,7 +1,7 @@
 # Global LLM configuration
 [llm] #OLLAMA:
 api_type = 'ollama'
-model = "qwen2.5" # model needs to support tool use
+model = "qwen2.5:7b-instruct-fp16" # 模型需要支持工具使用
 base_url = "http://localhost:11434/v1"
 max_tokens = 4096
 temperature = 0.0
@@ -31,7 +31,7 @@ api_key = "ollama"
 
 [llm.vision] #OLLAMA VISION:
 api_type = 'ollama'
-model = "llava" # or any other multimodal model you have in Ollama that supports vision
+model = "llava:7b-v1.6-mistral-q4_0" # 或你在一个名为Ollama的任何其他多模态模型中使用的 supports vision
 base_url = "http://localhost:11434/v1"
 max_tokens = 4096
 temperature = 0.0
