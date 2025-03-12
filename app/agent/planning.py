@@ -12,13 +12,6 @@ from app.tool import PlanningTool, Terminate, ToolCollection
 
 class PlanningAgent(ToolCallAgent):
     """
-    An agent that creates and manages plans to solve tasks.
-
-    This agent uses a planning tool to create and manage structured plans,
-    and tracks progress through individual steps until task completion.
-    """
-
-    """
     一个创建和管理解决任务计划的代理。
     这个代理使用规划工具来创建和管理结构化的计划，并通过个别步骤跟踪进度直至任务完成
     """
@@ -53,11 +46,10 @@ class PlanningAgent(ToolCallAgent):
     current_step_index: Optional[int] = None
 
     # 最大步骤数
-    max_steps: int = 20
+    max_steps: int = 30
 
     @model_validator(mode="after")
     def initialize_plan_and_verify_tools(self) -> "PlanningAgent":
-        """Initialize the agent with a default plan ID and validate required tools."""
         """
         使用默认计划ID初始化代理并验证所需工具。
         生成一个以 "plan_" 开头并加上当前时间戳的计划ID
@@ -150,7 +142,7 @@ class PlanningAgent(ToolCallAgent):
         """
         运行代理，可提供一个可选的初始请求。
         """
-        # 如果有初始请求，则创建初始计划，然后运行代理。
+        # 如果初始请求，则创建初始计划，然后运行代理。
         if request:
             await self.create_initial_plan(request)
         return await super().run()
@@ -246,24 +238,32 @@ class PlanningAgent(ToolCallAgent):
         """
         logger.info(f"Creating initial plan with ID: {self.active_plan_id}")
 
+        # 创建 user message, "分析请求并创建一个计划（带有ID）"
         messages = [
             Message.user_message(
                 f"Analyze the request and create a plan with ID {self.active_plan_id}: {request}"
             )
         ]
+        # user message 增加到记忆
         self.memory.add_messages(messages)
+
+        # 调用 LLM
         response = await self.llm.ask_tool(
             messages=messages,
             system_msgs=[Message.system_message(self.system_prompt)],
             tools=self.available_tools.to_params(),
             tool_choice="required",
         )
+
+        # 代理返回处理
         assistant_msg = Message.from_tool_calls(
             content=response.content, tool_calls=response.tool_calls
         )
 
+        # 代理请求记录记忆
         self.memory.add_message(assistant_msg)
 
+        # 循环工具响应
         plan_created = False
         for tool_call in response.tool_calls:
             if tool_call.function.name == "planning":
@@ -291,7 +291,7 @@ class PlanningAgent(ToolCallAgent):
 
 
 async def main():
-    # 配置并运行代理
+    # 配置并运行代理,帮我计划一次去月球的旅行
     agent = PlanningAgent(available_tools=ToolCollection(PlanningTool(), Terminate()))
     result = await agent.run("Help me plan a trip to the moon")
     print(result)

@@ -89,6 +89,7 @@ class Config:
         if example_path.exists():
             return example_path
         raise FileNotFoundError("No configuration file found in config directory")
+    
     # 载入配置文件
     def _load_config(self) -> dict:
         # 获取配置文件路径

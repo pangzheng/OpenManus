@@ -10,22 +10,20 @@ from app.schema import AgentState, Memory, Message
 
 
 class BaseAgent(BaseModel, ABC):
-    """Abstract base class for managing agent state and execution.
-
-    Provides foundational functionality for state transitions, memory management,
-    and a step-based execution loop. Subclasses must implement the `step` method.
-    """
     """
     用于管理代理状态和执行的基础类。
-    提供状态转换、记忆管理和基于步骤的执行循环的基本功能。子类必须实现 `step` 方法。```
+    提供状态转换、记忆管理和基于步骤的执行循环的基本功能。
+    子类必须实现 `step` 方法。
     """
 
     # 核心属性
-    name: str = Field(..., description="Unique name of the agent") # 代理的名称，必填字段
-    description: Optional[str] = Field(None, description="Optional agent description") # 代理的描述，可选字段
+    ## 代理的名称，必填字段
+    name: str = Field(..., description="Unique name of the agent") 
+    ## 代理的描述，可选字段
+    description: Optional[str] = Field(None, description="Optional agent description") 
 
     # 提示信息
-    # 系统级指令提示
+    # 系统级指令提示词，可选字段
     system_prompt: Optional[str] = Field(
         None, description="System-level instruction prompt"
     )
@@ -70,18 +68,6 @@ class BaseAgent(BaseModel, ABC):
 
     @asynccontextmanager
     async def state_context(self, new_state: AgentState):
-        """Context manager for safe agent state transitions.
-
-        Args:
-            new_state: The state to transition to during the context.
-
-        Yields:
-            None: Allows execution within the new state.
-
-        Raises:
-            ValueError: If the new_state is invalid.
-        """
-
         """用于安全代理状态转换的上下文管理器。
 
         Args:
@@ -117,17 +103,6 @@ class BaseAgent(BaseModel, ABC):
         content: str,
         **kwargs,
     ) -> None:
-        """Add a message to the agent's memory.
-
-        Args:
-            role: The role of the message sender (user, system, assistant, tool).
-            content: The message content.
-            **kwargs: Additional arguments (e.g., tool_call_id for tool messages).
-
-        Raises:
-            ValueError: If the role is unsupported.
-        """
-
         """向代理的记忆中添加一条消息。
 
         Args:
@@ -156,18 +131,6 @@ class BaseAgent(BaseModel, ABC):
         self.memory.add_message(msg)
 
     async def run(self, request: Optional[str] = None) -> str:
-        """Execute the agent's main loop asynchronously.
-
-        Args:
-            request: Optional initial user request to process.
-
-        Returns:
-            A string summarizing the execution results.
-
-        Raises:
-            RuntimeError: If the agent is not in IDLE state at start.
-        """
-
         """异步执行代理的主循环。
 
         Args:
@@ -180,7 +143,7 @@ class BaseAgent(BaseModel, ABC):
             RuntimeError: 如果代理在开始时不是IDLE状态。
         """
 
-        # 检查代理是否处于IDLE状态
+        # 检查代理,如果不处于IDLE状态，报错
         if self.state != AgentState.IDLE:
             raise RuntimeError(f"Cannot run agent from state: {self.state}")
 
@@ -213,10 +176,6 @@ class BaseAgent(BaseModel, ABC):
 
     @abstractmethod
     async def step(self) -> str:
-        """Execute a single step in the agent's workflow.
-
-        Must be implemented by subclasses to define specific behavior.
-        """
         """在代理的工作流程中执行单个步骤。
 
         子类必须实现此方法以定义特定行为。
@@ -227,7 +186,7 @@ class BaseAgent(BaseModel, ABC):
         stuck_prompt = "\
         Observed duplicate responses. Consider new strategies and avoid repeating ineffective paths already attempted."
         self.next_step_prompt = f"{stuck_prompt}\n{self.next_step_prompt}"
-        # 提示进入死循环
+        # 代理检测到卡滞状态，添加了提示
         logger.warning(f"Agent detected stuck state. Added prompt: {stuck_prompt}")
 
     def is_stuck(self) -> bool:

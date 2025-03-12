@@ -13,10 +13,9 @@ The tool provides functionality for creating plans, updating plan steps, and tra
 
 class PlanningTool(BaseTool):
     """
-    A planning tool that allows the agent to create and manage plans for solving complex tasks.
-    The tool provides functionality for creating plans, updating plan steps, and tracking progress.
+    一个规划工具，允许代理为解决复杂任务创建和管理计划。
+    该工具提供了创建计划、更新计划步骤以及跟踪进度的功能
     """
-
     # 名称
     name: str = "planning"
     # 描述
@@ -44,7 +43,7 @@ class PlanningTool(BaseTool):
                 "description": "Unique identifier for the plan. Required for create, update, set_active, and delete commands. Optional for get and mark_step (uses active plan if not specified).",
                 "type": "string",
             },
-            # 计划的唯一标识符ID
+            # plan_id(计划的唯一标识符ID)
             # 对于create、update、set_active和delete命令是必需的。对于get和mark_step是可选的（如果不指定则使用当前活动计划）。
             "title": {
                 "description": "Title for the plan. Required for create command, optional for update command.",
@@ -108,28 +107,18 @@ class PlanningTool(BaseTool):
         **kwargs,
     ):
         """
-        Execute the planning tool with the given command and parameters.
+        根据给定的命令和参数执行规划工具。
 
-        Parameters:
-        - command: The operation to perform
-        - plan_id: Unique identifier for the plan
-        - title: Title for the plan (used with create command)
-        - steps: List of steps for the plan (used with create command)
-        - step_index: Index of the step to update (used with mark_step command)
-        - step_status: Status to set for a step (used with mark_step command)
-        - step_notes: Additional notes for a step (used with mark_step command)
+        参数:
+        - command: 要执行的操作
+        - plan_id: 计划的唯一标识符
+        - title: 计划的标题（用于创建(create)命令）
+        - steps: 计划的步骤列表（用于创建(create)命令）
+        - step_index: 要更新的步骤索引（用于标记步(mark_step)骤命令）
+        - step_status: 要设置的步骤状态（用于标记(mark_step)步骤命令）
+        - step_notes: 步骤的附加说明（用于标记(mark_step)步骤命令）
         """
-        # 根据给定的命令和参数执行规划工具。
-
-        # 参数:
-        # - command: 要执行的操作
-        # - plan_id: 计划的唯一标识符
-        # - title: 计划的标题（用于创建命令）
-        # - steps: 计划的步骤列表（用于创建命令）
-        # - step_index: 要更新的步骤索引（用于标记步骤命令）
-        # - step_status: 要设置的步骤状态（用于标记步骤命令）
-        # - step_notes: 步骤的附加说明（用于标记步骤命令）
-
+        
         # 根据不同的命令调用相应的内部方法
         if command == "create":
             return self._create_plan(plan_id, title, steps)

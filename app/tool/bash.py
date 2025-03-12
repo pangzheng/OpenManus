@@ -4,22 +4,22 @@ from typing import Optional
 
 from app.exceptions import ToolError
 from app.tool.base import BaseTool, CLIResult, ToolResult
+"""
+在终端中执行一个 bash 命令。
+* 长运行命令：对于可能无限期运行的命令，应在后台运行，并将输出重定向到文件中，例如 `command = `python3 app.py > server.log 2>&1 &`。
 
-# 在终端中执行一个 bash 命令。
-# * 长运行命令：对于可能无限期运行的命令，应在后台运行，并将输出重定向到文件中，例如 `command = `python3 app.py > server.log 2>&1 &`。
+* 交互式：如果 bash 命令返回退出代码 `-1`，这意味着进程尚未完成。助手必须再发送一个带有空 `command` 的终端调用（这将获取任何额外的日志），或者可以向运行中的进程的STDIN发送附加文本（设置 `command` 为文本），或发送 `command=ctrl+c` 来中断进程。
 
-# * 交互式：如果 bash 命令返回退出代码 `-1`，这意味着进程尚未完成。助手必须再发送一个带有空 `command` 的终端调用（这将获取任何额外的日志），或者可以向运行中的进程的STDIN发送附加文本（设置 `command` 为文本），或发送 `command=ctrl+c` 来中断进程。
-
-# * 超时：如果命令执行结果说"命令超时。向该进程发送 SIGINT"，助手应该重新尝试在后台运行该命令。
+* 超时：如果命令执行结果说"命令超时。向该进程发送 SIGINT"，助手应该重新尝试在后台运行该命令。
+"""
 _BASH_DESCRIPTION = """Execute a bash command in the terminal.
 * Long running commands: For commands that may run indefinitely, it should be run in the background and the output should be redirected to a file, e.g. command = `python3 app.py > server.log 2>&1 &`.
 * Interactive: If a bash command returns exit code `-1`, this means the process is not yet finished. The assistant must then send a second call to terminal with an empty `command` (which will retrieve any additional logs), or it can send additional text (set `command` to the text) to STDIN of the running process, or it can send command=`ctrl+c` to interrupt the process.
 * Timeout: If a command execution result says "Command timed out. Sending SIGINT to the process", the assistant should retry running the command in the background.
 """
 
-# 创建 bash shells 会话类。
 class _BashSession:
-    """A session of a bash shell."""
+    """创建 bash shells 会话类。"""
     
     # 表示会话是否已启动
     _started: bool
@@ -63,9 +63,8 @@ class _BashSession:
         # 将会话标记为已启动
         self._started = True
 
-    # 终端停止函数
     def stop(self):
-        """Terminate the bash shell."""
+        """终止 bash shell."""
         # 如果没有启动直接抛出异常
         if not self._started:
             raise ToolError("Session has not started.")
@@ -75,9 +74,8 @@ class _BashSession:
         # 终止 bash 进程
         self._process.terminate()
 
-    # 异步 bash shell 中执行一个命令。
     async def run(self, command: str):
-        """Execute a command in the bash shell."""
+        """异步 bash shell 中执行一个命令。"""
         # 检查是否启动
         if not self._started:
             raise ToolError("Session has not started.")
@@ -155,9 +153,8 @@ class _BashSession:
         # 返回包含输出和错误信息的 CLIResult
         return CLIResult(output=output, error=error)
 
-# 创建 bash 继承 BaseTool 类，用于执行bash命令的工具类。
 class Bash(BaseTool):
-    """A tool for executing bash commands"""
+    """用于执行bash命令的工具类"""
 
     # 名称
     name: str = "bash"
@@ -179,11 +176,13 @@ class Bash(BaseTool):
     # 用于存储 _BashSession 实例的变量，初始值为 None
     _session: Optional[_BashSession] = None
 
-    # 定义异步方法 execute，用于执行 bash 命令
-    # command 参数：要执行的bash命令，默认为 None
-    # restart 参数：是否重启会话，默认为 False
-    # **kwargs：接收其他可能传入的关键字参数
-    # 返回值类型为 CLIResult
+    """
+    定义异步方法 execute，用于执行 bash 命令
+    command 参数：要执行的bash命令，默认为 None
+    restart 参数：是否重启会话，默认为 False
+    **kwargs：接收其他可能传入的关键字参数
+    返回值类型为 CLIResult
+    """
     async def execute(
         self, command: str | None = None, restart: bool = False, **kwargs
     ) -> CLIResult:

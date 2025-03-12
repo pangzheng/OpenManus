@@ -11,13 +11,7 @@ from app.tool.python_execute import PythonExecute
 # Manus 类继承自 ToolCallAgent 类，是一个多功能的通用代理类
 class Manus(ToolCallAgent):
     """
-    A versatile general-purpose agent that uses planning to solve various tasks.
-
-    This agent extends PlanningAgent with a comprehensive set of tools and capabilities,
-    including Python execution, web browsing, file operations, and information retrieval
-    to handle a wide range of user requests.
-    """
-    """
+    一个用途广泛的通用代理，使用规划来解决各种任务。
     这个代理扩展了 PlanningAgent，并具备一系列工具和功能，
     包括 Python 执行、网页浏览、文件操作和信息检索，以处理广泛的用户请求。```
     """

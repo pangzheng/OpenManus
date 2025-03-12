@@ -123,9 +123,8 @@ class BrowserUseTool(BaseTool):
         # 正常返回验证后的参数    
         return v
 
-    # 确保浏览器和上下文已初始化的异步方法
     async def _ensure_browser_initialized(self) -> BrowserContext:
-        """Ensure browser and context are initialized."""
+        """确保浏览器和上下文已初始化的异步方法"""
         # 如果浏览器对象为空，则创建一个新的浏览器对象
         if self.browser is None:
             self.browser = BrowserUseBrowser(BrowserConfig(headless=False))
@@ -149,33 +148,20 @@ class BrowserUseTool(BaseTool):
         **kwargs,
     ) -> ToolResult:
         """
-        Execute a specified browser action.
-
+        执行指定的浏览器操作。
         Args:
-            action: The browser action to perform
-            url: URL for navigation or new tab
-            index: Element index for click or input actions
-            text: Text for input action
-            script: JavaScript code for execution
-            scroll_amount: Pixels to scroll for scroll action
-            tab_id: Tab ID for switch_tab action
-            **kwargs: Additional arguments
-
+            action: 要执行的浏览器操作
+            url: 导航或新标签页的URL
+            index: 点击或输入动作的元素索引
+            text: 输入动作的文本
+            script: 执行的动作的JavaScript代码
+            scroll_amount: 滚动动作的像素数
+            tab_id: 切换标签页动作的标签ID
+            **kwargs: 额外的参数
         Returns:
-            ToolResult with the action's output or error
+            包含操作输出或错误的ToolResult
         """
-        # Args:
-        #     action: 要执行的浏览器操作
-        #     url: 导航或新标签页的URL
-        #     index: 点击或输入动作的元素索引
-        #     text: 输入动作的文本
-        #     script: 执行的动作的JavaScript代码
-        #     scroll_amount: 滚动动作的像素数
-        #     tab_id: 切换标签页动作的标签ID
-        #     **kwargs: 额外的参数
-        # Returns:
-        #     包含操作输出或错误的ToolResult
-
+        
         # 使用异步锁确保线程安全
         async with self.lock:
             try:
@@ -320,10 +306,9 @@ class BrowserUseTool(BaseTool):
              # 捕获异常并返回错误结果
             except Exception as e:
                 return ToolResult(error=f"Browser action '{action}' failed: {str(e)}")
-    
-    # 获取当前浏览器状态作为ToolResult
+     
     async def get_current_state(self) -> ToolResult:
-        """Get the current browser state as a ToolResult."""
+        """获取当前浏览器状态作为ToolResult"""
         # 使用异步锁确保线程安全
         async with self.lock:
             try:
@@ -344,9 +329,8 @@ class BrowserUseTool(BaseTool):
             except Exception as e:
                 return ToolResult(error=f"Failed to get browser state: {str(e)}")
     
-    # 清理浏览器资源的异步方法
     async def cleanup(self):
-        """Clean up browser resources."""
+        """清理浏览器资源的异步方法"""
          # 使用异步锁确保线程安全
         async with self.lock:
             # 如果上下文对象存在，关闭上下文并清空相关对象
@@ -358,9 +342,9 @@ class BrowserUseTool(BaseTool):
             if self.browser is not None:
                 await self.browser.close()
                 self.browser = None
-    # 对象销毁时的析构函数，确保资源清理
+
     def __del__(self):
-        """Ensure cleanup when object is destroyed."""
+        """对象销毁时的析构函数，确保资源清理"""
          # 如果浏览器或上下文对象存在
         if self.browser is not None or self.context is not None:
             # 尝试运行清理方法

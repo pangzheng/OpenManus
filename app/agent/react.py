@@ -7,7 +7,6 @@ from app.agent.base import BaseAgent
 from app.llm import LLM
 from app.schema import AgentState, Memory
 
-
 class ReActAgent(BaseAgent, ABC):
     """
     ReActAgent类继承自BaseAgent和ABC（抽象基类），意味着它是一个抽象类，包含抽象方法
@@ -34,19 +33,20 @@ class ReActAgent(BaseAgent, ABC):
     current_step: int = 0
 
     @abstractmethod
-    # 抽象异步方法 think，用于处理当前状态并决定下一步行动，返回布尔值
+    # 抽象异步方法 think，
     async def think(self) -> bool:
-        """Process current state and decide next action"""
+        """用于处理当前状态并决定下一步行动，返回布尔值"""
 
     @abstractmethod
-    # 抽象异步方法 act，用于执行已决定的行动，返回字符串
+    # 抽象异步方法 act，
     async def act(self) -> str:
-        """Execute decided actions"""
+        """用于执行已决定的行动，返回字符串"""
 
-    # 异步方法 step，用于执行单个步骤：思考并行动，返回字符串
+    # 异步方法 step，：思考并行动，返回字符串
     async def step(self) -> str:
-        """Execute a single step: think and act."""
+        """用于执行单个步骤"""
         should_act = await self.think()
+        # 如果think()返回正常,执行act()
         if not should_act:
             return "Thinking complete - no action needed"
         return await self.act()
