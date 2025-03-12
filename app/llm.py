@@ -75,28 +75,6 @@ class LLM:
     # 静态方法，用于将消息格式化为OpenAI所需的格式
     def format_messages(messages: List[Union[dict, Message]]) -> List[dict]:
         """
-        Format messages for LLM by converting them to OpenAI message format.
-
-        Args:
-            messages: List of messages that can be either dict or Message objects
-
-        Returns:
-            List[dict]: List of formatted messages in OpenAI format
-
-        Raises:
-            ValueError: If messages are invalid or missing required fields
-            TypeError: If unsupported message types are provided
-
-        Examples:
-            >>> msgs = [
-            ...     Message.system_message("You are a helpful assistant"),
-            ...     {"role": "user", "content": "Hello"},
-            ...     Message.user_message("How are you?")
-            ... ]
-            >>> formatted = LLM.format_messages(msgs)
-        """
-
-        """
         将消息格式化为LLM可识别的OpenAl消息格式
         Args:
             messages: 消息列表，可以是字典或Message对象
@@ -157,24 +135,6 @@ class LLM:
         stream: bool = True,
         temperature: Optional[float] = None,
     ) -> str:
-        """
-        Send a prompt to the LLM and get the response.
-
-        Args:
-            messages: List of conversation messages
-            system_msgs: Optional system messages to prepend
-            stream (bool): Whether to stream the response
-            temperature (float): Sampling temperature for the response
-
-        Returns:
-            str: The generated response
-
-        Raises:
-            ValueError: If messages are invalid or response is empty
-            OpenAIError: If API call fails after retries
-            Exception: For unexpected errors
-        """
-
         """
         将提示发送给LLM并获取响应。
         Args:
@@ -273,28 +233,7 @@ class LLM:
         **kwargs,
     ):
         """
-        Ask LLM using functions/tools and return the response.
-
-        Args:
-            messages: List of conversation messages
-            system_msgs: Optional system messages to prepend
-            timeout: Request timeout in seconds
-            tools: List of tools to use
-            tool_choice: Tool choice strategy
-            temperature: Sampling temperature for the response
-            **kwargs: Additional completion arguments
-
-        Returns:
-            ChatCompletionMessage: The model's response
-
-        Raises:
-            ValueError: If tools, tool_choice, or messages are invalid
-            OpenAIError: If API call fails after retries
-            Exception: For unexpected errors
-        """
-
-        """
-        使用函数/工具询问LLM并返回响应
+        Ask LLM 使用函数/工具询问LLM并返回响应
         Args:
             messages: 会话消息列表
             system_msgs: 可选的系统消息，用于前置
@@ -310,6 +249,7 @@ class LLM:
             OpenAIError: 如果API调用在重试后失败
             Exception: 对于意外错误
         """
+
         try:
             # # 验证 tool_choice 是否有效
             if tool_choice not in ["none", "auto", "required"]:

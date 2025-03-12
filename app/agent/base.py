@@ -151,7 +151,9 @@ class BaseAgent(BaseModel, ABC):
         if request:
             self.update_memory("user", request)
 
+        # 结果创建一个列表
         results: List[str] = []
+        
         async with self.state_context(AgentState.RUNNING):
             while (
                 self.current_step < self.max_steps and self.state != AgentState.FINISHED

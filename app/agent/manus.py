@@ -26,6 +26,9 @@ class Manus(ToolCallAgent):
     # 用于设置下一步提示信息，manus.py 的提示词
     next_step_prompt: str = NEXT_STEP_PROMPT
 
+    # 最大步骤数
+    max_steps: int = 60
+
     # 定义 Manus 类的 available_tools 属性，类型为 ToolCollection，使用 Field 定义，
     # 默认值通过 lambda 函数生成，该 lambda 函数创建了一个包含 PythonExecute、GoogleSearch、
     # BrowserUseTool、FileSaver 和 Terminate 实例的 ToolCollection 对象，
