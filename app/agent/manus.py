@@ -17,9 +17,9 @@ class Manus(ToolCallAgent):
     """
     # 名字
     name: str = "Manus"
-    # 描述，一个多功能的代理，可以使用多种工具来解决各种任务
+    # 描述
     description: str = (
-        "A versatile agent that can solve various tasks using multiple tools"
+        "一个多功能的代理，可以使用多种工具来解决各种任务"
     )
     # 用于设置系统提示信息，manus.py 的提示词
     system_prompt: str = SYSTEM_PROMPT

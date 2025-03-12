@@ -25,28 +25,23 @@ class PythonExecute(BaseTool):
         "required": ["code"],
     }
 
-    # 定义execute异步方法，用于执行代码并设置超时
+     
     async def execute(
         self,
         code: str,
         timeout: int = 5,
     ) -> Dict:
         """
-        Executes the provided Python code with a timeout.
+        定义execute异步方法，用于执行代码并设置超时
 
-        Args:
-            code (str): The Python code to execute.
-            timeout (int): Execution timeout in seconds.
-
-        Returns:
-            Dict: Contains 'output' with execution output or error message and 'success' status.
+        使用超时设置执行提供的 Python 代码。
+        参数:
+            code (str): 要执行的Python代码。
+            timeout (int): 执行超时时间，单位为秒。
+        返回:
+            Dict: 包含 'observation'，其值为执行输出或错误消息，以及 'success' 状态。
         """
-        # 使用超时设置执行提供的 Python 代码。
-        # 参数:
-        #     code (str): 要执行的Python代码。
-        #     timeout (int): 执行超时时间，单位为秒。
-        # 返回:
-        #     Dict: 包含 'observation'，其值为执行输出或错误消息，以及 'success' 状态。
+        
         result = {"observation": ""}
 
         # 定义 run_code 内部函数来实际执行代码

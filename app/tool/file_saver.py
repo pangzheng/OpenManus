@@ -11,9 +11,9 @@ class FileSaver(BaseTool):
     name: str = "file_saver"
     # 描述
     description: str = """Save content to a local file at a specified path.
-Use this tool when you need to save text, code, or generated content to a file on the local filesystem.
-The tool accepts content and a file path, and saves the content to that location.
-"""
+    Use this tool when you need to save text, code, or generated content to a file on the local filesystem.
+    The tool accepts content and a file path, and saves the content to that location.
+    """
     # 在需要将文本、代码或生成的内容保存到本地文件系统中的文件时使用此工具。
     # 该工具接受内容和文件路径，并将内容保存到该位置。
     
@@ -43,25 +43,19 @@ The tool accepts content and a file path, and saves the content to that location
         "required": ["content", "file_path"],
     }
 
-    # 定义一个异步执行方法，用于将内容保存到指定路径的文件中
+    # 
     async def execute(self, content: str, file_path: str, mode: str = "w") -> str:
         """
-        Save content to a file at the specified path.
+        定义一个异步执行方法，用于将内容保存到指定路径的文件中
 
         Args:
-            content (str): The content to save to the file.
-            file_path (str): The path where the file should be saved.
-            mode (str, optional): The file opening mode. Default is 'w' for write. Use 'a' for append.
-
+            content (str): 要保存到文件的内容。
+            file_path (str): 文件应保存的路径。
+            mode (str, optional): 文件打开模式。默认为写入模式'w'。使用'a'进行追加。
         Returns:
-            str: A message indicating the result of the operation.
+            str: 操作结果的消息。
         """
-        # Args:
-        #     content (str): 要保存到文件的内容。
-        #     file_path (str): 文件应保存的路径。
-        #     mode (str, optional): 文件打开模式。默认为写入模式'w'。使用'a'进行追加。
-        # Returns:
-        #     str: 操作结果的消息。
+       
         try:
             # # 获取文件路径中的目录部分
             directory = os.path.dirname(file_path)

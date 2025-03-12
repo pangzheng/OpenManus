@@ -41,20 +41,15 @@ The tool returns a list of URLs that match the search query.
     # 定义异步执行的 execute 方法 ，接收搜索查询字符串query和结果数量num_results（默认10），返回字符串列表
     async def execute(self, query: str, num_results: int = 10) -> List[str]:
         """
-        Execute a Google search and return a list of URLs.
+        执行Google搜索并返回一个URL列表。
 
         Args:
-            query (str): The search query to submit to Google.
-            num_results (int, optional): The number of search results to return. Default is 10.
-
+            query (str): 要提交给Google的搜索查询。
+            num_results (int, optional): 返回的搜索结果数量。默认为10。
         Returns:
-            List[str]: A list of URLs matching the search query.
+            List[str]: 匹配搜索查询的URL列表。
         """
-        # Args:
-        #     query (str): 要提交给Google的搜索查询。
-        #     num_results (int, optional): 返回的搜索结果数量。默认为10。
-        # Returns:
-        #     List[str]: 匹配搜索查询的URL列表。
+       
 
         # 获取当前的事件循环
         loop = asyncio.get_event_loop()

@@ -9,6 +9,7 @@ async def main():
     while True:
         try:
             prompt = input("Enter your prompt (or 'exit' to quit): ")
+            # 输入 exit 退出
             if prompt.lower() == "exit":
                 logger.info("Goodbye!")
                 break

@@ -25,6 +25,10 @@ MAX_RESPONSE_LEN: int = 16000
 # 您应该使用 `grep -n` 搜索文件以找到所需行号后再次尝试此工具。
 TRUNCATED_MESSAGE: str = "<response clipped><NOTE>To save on context only part of this file has been shown to you. You should retry this tool after you have searched inside the file with `grep -n` in order to find the line numbers of what you are looking for.</NOTE>"
 
+"""
+<响应截断><注意>为了节省上下文，仅显示了此文件的部分内容。您应该在使用`grep -n`搜索文件后再重新尝试此工具，以便找到您要查找的行号。
+"""
+
 _STR_REPLACE_EDITOR_DESCRIPTION = """Custom editing tool for viewing, creating and editing files
 * State is persistent across command calls and discussions with the user
 * If `path` is a file, `view` displays the result of applying `cat -n`. If `path` is a directory, `view` lists non-hidden files and directories up to 2 levels deep
