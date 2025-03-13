@@ -74,7 +74,8 @@ class ToolCallAgent(ReActAgent):
         try:
             # 处理不同的工具选择模式
             if self.tool_choices == "none":
-                # 如果在不允许使用工具时尝试使用工具，记录警告"嗯，{self.name} 在工具不可用时尝试使用工具!
+                # 如果在不允许使用工具时尝试使用工具，记录警告
+                # "嗯，{self.name} 在工具不可用时尝试使用工具!
                 if response.tool_calls:
                     logger.warning(
                         f"🤔 Hmm, {self.name} tried to use tools when they weren't available!"

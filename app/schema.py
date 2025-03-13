@@ -112,15 +112,7 @@ class Message(BaseModel):
     def from_tool_calls(
         cls, tool_calls: List[Any], content: Union[str, List[str]] = "", **kwargs
     ):
-        """Create ToolCallsMessage from raw tool calls.
-
-        Args:
-            tool_calls: Raw tool calls from LLM
-            content: Optional message content
-        """
-
-        """
-        从原始工具调用创建 ToolCallsMessage。 
+        """从原始工具调用创建 ToolCallsMessage。 
 
         Args: 
             tool_calls: 由LLM返回的原始工具调用 

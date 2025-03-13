@@ -27,11 +27,11 @@ class Manus(ToolCallAgent):
     next_step_prompt: str = NEXT_STEP_PROMPT
 
     # 最大步骤数
-    max_steps: int = 60
+    max_steps: int = 10
 
     # 定义 Manus 类的 available_tools 属性，类型为 ToolCollection，使用 Field 定义，
-    # 默认值通过 lambda 函数生成，该 lambda 函数创建了一个包含 PythonExecute、GoogleSearch、
-    # BrowserUseTool、FileSaver 和 Terminate 实例的 ToolCollection 对象，
+    # 默认值通过 lambda 函数生成，
+    # 该 lambda 函数创建了一个包含 PythonExecute、GoogleSearch、BrowserUseTool、FileSaver 和 Terminate 实例的 ToolCollection 对象，
     # 向工具集合中添加通用工具
     available_tools: ToolCollection = Field(
         default_factory=lambda: ToolCollection(
