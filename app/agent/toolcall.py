@@ -200,7 +200,7 @@ class ToolCallAgent(ReActAgent):
             # 记录解析参数错误信息
             error_msg = f"Error parsing arguments for {name}: Invalid JSON format"
             logger.error(
-                f"📝 Oops! The arguments for '{name}' don't make sense - invalid JSON"
+                f"📝 Oops! The arguments for '{name}' don't make sense - invalid JSON, arguments:{command.function.arguments}"
             )
             return f"Error: {error_msg}"
         # 记录工具执行错误信息
