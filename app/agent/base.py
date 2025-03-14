@@ -202,14 +202,16 @@ class BaseAgent(BaseModel, ABC):
         if not last_message.content:
             return False
 
-        # 统计相同内容的出现次数
+        # 统计相同内容的出现次数，
+        # (sum(1 for msg in ... if ...))减少内存消耗，满足条件的只显示1
+        # 检查 role 必须是代理且与最后一条相同
         duplicate_count = sum(
             1
             for msg in reversed(self.memory.messages[:-1])
             if msg.role == "assistant" and msg.content == last_message.content
         )
 
-        # 如果重复次数达到阈值，认为陷入死循环
+        # 如果重复次数达到阈值(默认2)，认为陷入死循环
         return duplicate_count >= self.duplicate_threshold
 
     @property

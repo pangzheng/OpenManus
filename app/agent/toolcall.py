@@ -66,16 +66,21 @@ class ToolCallAgent(ReActAgent):
         logger.info(
             f"🛠️ {self.name} selected {len(response.tool_calls) if response.tool_calls else 0} tools to use"
         )
+
         if response.tool_calls:
             logger.info(
                 f"🧰 Tools being prepared: {[call.function.name for call in response.tool_calls]}"
             )
 
+        # 处理不同的工具选择模式
         try:
-            # 处理不同的工具选择模式
+            # 选择模式等于 none
             if self.tool_choices == "none":
+                # 实验日志
+                logger.info(
+                        f" this is tool choices {self.tool_choices} ")
                 # 如果在不允许使用工具时尝试使用工具，记录警告
-                # "嗯，{self.name} 在工具不可用时尝试使用工具!
+                # "嗯，{self.name} 在工具不可用时尝试使用工具!   
                 if response.tool_calls:
                     logger.warning(
                         f"🤔 Hmm, {self.name} tried to use tools when they weren't available!"
@@ -83,9 +88,11 @@ class ToolCallAgent(ReActAgent):
                 # 如果有响应内容，添加到记忆中并返回 True
                 if response.content:
                     self.memory.add_message(Message.assistant_message(response.content))
+                    
                     return True
                 return False
 
+            
             # 创建并添加助手消息
             assistant_msg = (
                 Message.from_tool_calls(
@@ -94,7 +101,12 @@ class ToolCallAgent(ReActAgent):
                 if self.tool_calls
                 else Message.assistant_message(response.content)
             )
+            
+            # 添加助手消息到记忆中
             self.memory.add_message(assistant_msg)
+            
+            # 实验日志,打印 assistant_msg
+            # logger.info(f"add assistant message  {assistant_msg} to memory")
 
             # 如果工具选择模式为"required"且没有工具调用，返回True，将在act()中处理
             if self.tool_choices == "required" and not self.tool_calls:
@@ -103,6 +115,10 @@ class ToolCallAgent(ReActAgent):
             # 如果工具选择模式为"auto"且没有工具调用，根据是否有响应内容返回
             if self.tool_choices == "auto" and not self.tool_calls:
                 return bool(response.content)
+            
+            # 实验日志,打印记忆最后几条
+            logger.info(f" memory is  {self.memory.get_recent_messages}")
+
             # 如果有工具调用，返回True
             return bool(self.tool_calls)
         except Exception as e:
@@ -152,6 +168,7 @@ class ToolCallAgent(ReActAgent):
             return "Error: Invalid command format"
 
         name = command.function.name
+        
         # 检查工具是否在可用工具列表中
         if name not in self.available_tools.tool_map:
             return f"Error: Unknown tool '{name}'"
@@ -174,6 +191,9 @@ class ToolCallAgent(ReActAgent):
 
             # 处理特殊的工具，如 `finish`
             await self._handle_special_tool(name=name, result=result)
+
+            # 测试日志
+            logger.info(f"🔧 Activating tool result: '{observation}'")
 
             return observation
         except json.JSONDecodeError:

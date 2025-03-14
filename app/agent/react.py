@@ -46,6 +46,7 @@ class ReActAgent(BaseAgent, ABC):
     async def step(self) -> str:
         """用于执行单个步骤"""
         should_act = await self.think()
+        
         # 如果think()返回正常,执行act()
         if not should_act:
             return "Thinking complete - no action needed"

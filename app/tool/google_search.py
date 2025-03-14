@@ -49,7 +49,6 @@ The tool returns a list of URLs that match the search query.
         Returns:
             List[str]: 匹配搜索查询的URL列表。
         """
-       
 
         # 获取当前的事件循环
         loop = asyncio.get_event_loop()

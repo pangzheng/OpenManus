@@ -1,6 +1,7 @@
 # Global LLM configuration
 [llm] #OLLAMA:
 api_type = 'ollama'
+# model = "qwen2.5:7b-instruct-fp16" # 模型需要支持工具使用
 model = "qwen2.5:7b-instruct-q4_K_M" # 模型需要支持工具使用
 # base_url = "http://host.docker.internal:11434/v1"
 base_url = "http://localhost:11434/v1"
