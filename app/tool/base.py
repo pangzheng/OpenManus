@@ -58,7 +58,7 @@ class ToolResult(BaseModel):
 
     # 定义布尔值判断方法，只要有任何一个字段有值就返回 True
     def __bool__(self):
-        return any(getattr(self, field) for field in self.__fields__)
+        return any(getattr(self, field) for field in self.model_fields)
 
     # 定义加法运算符重载方法，用于合并两个 ToolResult 对象
     def __add__(self, other: "ToolResult"):
@@ -89,7 +89,7 @@ class ToolResult(BaseModel):
         返回一个新的ToolResult，其中给定字段已被替换
         """
         # return self.copy(update=kwargs)
-        return type(self)(**{**self.dict(), **kwargs})
+        return type(self)(**{**self.model_dump(), **kwargs})
 
 class CLIResult(ToolResult):
     """一个可以作为命令行界面输出渲染的ToolResult。"""
