@@ -13,7 +13,10 @@ async def main():
             if prompt.lower() == "exit":
                 logger.info("Goodbye!")
                 break
-            logger.warning("Processing your request...")
+            if prompt.strip().isspace():
+                logger.warning("Skipping empty prompt.")
+                continue
+            logger.info(f"Processing your request prompt: {prompt}...")
             await agent.run(prompt)
         except KeyboardInterrupt:
             logger.warning("Goodbye!")
