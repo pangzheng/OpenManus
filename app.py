@@ -32,7 +32,7 @@ class Task(BaseModel):
 
     def model_dump(self, *args, **kwargs):
         data = super().model_dump(*args, **kwargs)
-        data['created_at'] = self.created_at.isoformat()
+        data["created_at"] = self.created_at.isoformat()
         return data
 
 class TaskManager:
@@ -107,7 +107,7 @@ async def run_task(task_id: str, prompt: str):
         agent = ToolCallAgent(
             name="TaskAgent",
             description="Agent for handling task execution",
-            max_steps=30
+            max_steps=30,
         )
 
         async def on_think(thought):
@@ -214,8 +214,8 @@ async def task_events(task_id: str):
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
-            "X-Accel-Buffering": "no"
-        }
+            "X-Accel-Buffering": "no",
+        },
     )
 
 @app.get("/tasks")

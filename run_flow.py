@@ -8,6 +8,8 @@ from app.flow.flow_factory import FlowFactory
 async def run_flow():
     agent = Manus()
 
+    # print("---------------------PlanningFlow---------------------")
+
     while True:
         try:
             prompt = input("Enter your prompt (or 'exit' to quit): ")
@@ -15,6 +17,7 @@ async def run_flow():
                 print("Goodbye!")
                 break
 
+            # print("---------------------PlanningFlow---------------------")
             flow = FlowFactory.create_flow(
                 flow_type=FlowType.PLANNING,
                 agents=agent,
