@@ -31,6 +31,8 @@ content extraction, and tab management. Supported actions include:
 - 'input_text': Input text into an element
 - 'screenshot': Capture a screenshot
 - 'get_html': Get page HTML content
+- 'get_text': Get text content of the page
+- 'read_links': Get all links on the page
 - 'execute_js': Execute JavaScript code
 - 'scroll': Scroll the page
 - 'switch_tab': Switch to a specific tab
@@ -58,6 +60,7 @@ class BrowserUseTool(BaseTool):
                     "input_text",  # 在指定索引的元素中输入文本
                     "screenshot", # 截取屏幕截图
                     "get_html", # 获取页面HTML
+                    "get_text", # 获取页面文本
                     "execute_js", # 执行JavaScript代码
                     "scroll",  # 滚动页面
                     "switch_tab", # 切换到指定ID的标签页
@@ -235,6 +238,18 @@ class BrowserUseTool(BaseTool):
                     # 返回成功结果
                     return ToolResult(output=truncated)
 
+                # 如果操作是获取页面文本
+                elif action == "get_text":
+                    text = await context.execute_javascript("document.body.innerText")
+                    return ToolResult(output=text)
+
+                # 如果操作是获取页面所有链接
+                elif action == "read_links":
+                    links = await context.execute_javascript(
+                        "document.querySelectorAll('a[href]').forEach((elem) => {if (elem.innerText) {console.log(elem.innerText, elem.href)}})"
+                    )
+                    return ToolResult(output=links)
+                
                 # 如果操作是执行JavaScript代码
                 elif action == "execute_js":
                     # 如果脚本为空，返回错误结果
