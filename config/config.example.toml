@@ -7,6 +7,16 @@ max_tokens = 4096
 temperature = 0.0
 api_key = "ollama"
 
+# Sandbox configuration
+[sandbox]
+use_sandbox = false
+image = "python:3.10-slim"
+work_dir = "/workspace"
+memory_limit = "1g"  # 512m
+cpu_limit = 2.0
+timeout = 300
+network_enabled = false
+
 # [llm]
 # model = "claude-3-5-sonnet"
 # base_url = "https://api.openai.com/v1"

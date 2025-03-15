@@ -33,10 +33,26 @@ class LLMSettings(BaseModel):
     # 如果是AzureOpenai，对应的版本号
     api_version: str = Field(..., description="Azure Openai version if AzureOpenai")
 
+# 沙盒设置
+class SandboxConfig(BaseModel):
+    """执行沙箱的配置"""
+
+    use_sandbox: bool = Field(False, description="Whether to use the sandbox")
+    image: str = Field("python:3.10-slim", description="Base image")
+    work_dir: str = Field("/workspace", description="Container working directory")
+    memory_limit: str = Field("512m", description="Memory limit")
+    cpu_limit: float = Field(1.0, description="CPU limit")
+    timeout: int = Field(300, description="Default command timeout (seconds)")
+    network_enabled: bool = Field(
+        False, description="Whether network access is allowed"
+    )
+
+
 # APP 设置，继承 BaseModel
 class AppConfig(BaseModel):
     # 包含不同LLM设置的字典
     llm: Dict[str, LLMSettings]
+    sandbox: SandboxConfig
 
 # 配置类
 class Config:
@@ -128,7 +144,8 @@ class Config:
                     name: {**default_settings, **override_config}
                     for name, override_config in llm_overrides.items()
                 },
-            }
+            },
+            "sandbox": raw_config.get("sandbox", {}),
         }
         # 使用配置字典初始化AppConfig对象
         self._config = AppConfig(**config_dict)
@@ -138,5 +155,9 @@ class Config:
         # 返回配置中的LLM设置
         return self._config.llm
 
+    @property
+    def sandbox(self) -> SandboxConfig:
+        return self._config.sandbox
+    
 # 创建配置单例对象
 config = Config()

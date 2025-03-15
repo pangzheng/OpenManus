@@ -179,3 +179,4 @@ data/
 
 # Workspace
 workspace/
+.DS_Store

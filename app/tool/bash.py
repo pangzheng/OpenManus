@@ -1,7 +1,7 @@
 import asyncio
 import os
 from typing import Optional
-
+from app.sandbox.client import LocalSandboxClient
 from app.exceptions import ToolError
 from app.tool.base import BaseTool, CLIResult, ToolResult
 """
@@ -12,11 +12,12 @@ from app.tool.base import BaseTool, CLIResult, ToolResult
 
 * 超时：如果命令执行结果说"命令超时。向该进程发送 SIGINT"，助手应该重新尝试在后台运行该命令。
 """
-_BASH_DESCRIPTION = """Execute a bash command in the terminal.
-* Long running commands: For commands that may run indefinitely, it should be run in the background and the output should be redirected to a file, e.g. command = `python3 app.py > server.log 2>&1 &`.
-* Interactive: If a bash command returns exit code `-1`, this means the process is not yet finished. The assistant must then send a second call to terminal with an empty `command` (which will retrieve any additional logs), or it can send additional text (set `command` to the text) to STDIN of the running process, or it can send command=`ctrl+c` to interrupt the process.
-* Timeout: If a command execution result says "Command timed out. Sending SIGINT to the process", the assistant should retry running the command in the background.
-"""
+# _BASH_DESCRIPTION = """Execute a bash command in the terminal.
+# * Long running commands: For commands that may run indefinitely, it should be run in the background and the output should be redirected to a file, e.g. command = `python3 app.py > server.log 2>&1 &`.
+# * Interactive: If a bash command returns exit code `-1`, this means the process is not yet finished. The assistant must then send a second call to terminal with an empty `command` (which will retrieve any additional logs), or it can send additional text (set `command` to the text) to STDIN of the running process, or it can send command=`ctrl+c` to interrupt the process.
+# * Timeout: If a command execution result says "Command timed out. Sending SIGINT to the process", the assistant should retry running the command in the background.
+# """
+_BASH_DESCRIPTION = """Executes bash commands in a sandboxed environment."""
 
 class _BashSession:
     """创建 bash shells 会话类。"""
@@ -154,7 +155,7 @@ class _BashSession:
         return CLIResult(output=output, error=error)
 
 class Bash(BaseTool):
-    """用于执行bash命令的工具类"""
+    """用于在沙箱中执行bash命令的工具类"""
 
     # 名称
     name: str = "bash"
@@ -166,7 +167,8 @@ class Bash(BaseTool):
         "properties": {
             "command": {
                 "type": "string",
-                "description": "The bash command to execute. Can be empty to view additional logs when previous exit code is `-1`. Can be `ctrl+c` to interrupt the currently running process.",
+                "description": "The bash command to execute in the sandbox.",
+                #"description": "The bash command to execute. Can be empty to view additional logs when previous exit code is `-1`. Can be `ctrl+c` to interrupt the currently running process.",
             },
         },
         "required": ["command"],
@@ -174,7 +176,13 @@ class Bash(BaseTool):
     }
 
     # 用于存储 _BashSession 实例的变量，初始值为 None
-    _session: Optional[_BashSession] = None
+    # _session: Optional[_BashSession] = None
+
+    _client: Optional[LocalSandboxClient] = None
+
+    def __init__(self):
+        super().__init__()
+        self._client = None  # 延迟初始化
 
     """
     定义异步方法 execute，用于执行 bash 命令
@@ -189,30 +197,58 @@ class Bash(BaseTool):
         # 如果 restart 为 True
         if restart:
             # 如果当前已经有会话实例，停止该会话
-            if self._session:
-                self._session.stop()
+            # if self._session:
+            #     self._session.stop()
             # 创建一个新的 _BashSession 实例    
-            self._session = _BashSession()
+            # self._session = _BashSession()
             # 异步启动新的会话
-            await self._session.start()
+            # await self._session.start()
+
             # 返回一个 ToolResult 实例，表示工具已重启
-            return ToolResult(system="tool has been restarted.")
+            # return ToolResult(system="tool has been restarted.")
         
         # 如果当前没有会话实例
-        if self._session is None:
+        # if self._session is None:
             # 创建一个新的 _BashSession 实例
-            self._session = _BashSession()
+            # self._session = _BashSession()
             # 异步启动新的会话
-            await self._session.start()
+            # await self._session.start()
         
         # 如果传入了 command 参数
-        if command is not None:
+        # if command is not None:
             # 异步执行会话的 run 方法来运行bash命令，并返回结果
-            return await self._session.run(command)
+            # return await self._session.run(command)
         
+        # NEW
+            if self._client:
+                await self._client.cleanup()  # 清理现有沙箱
+            self._client = LocalSandboxClient()
+            await self._client.create()
+            return ToolResult(system="sandbox has been restarted.")
+        
+        if self._client is None:
+            self._client = LocalSandboxClient()
+            await self._client.create()
+        
+        if command is not None:
+            try:
+                if command == "ctrl+c":
+                    return ToolResult(system="Command interrupted (simulated).")
+                timeout = kwargs.get("timeout", 120)  # 默认 120 秒
+                output = await self._client.run_command(command, timeout=timeout)
+                return CLIResult(output=output, error="")
+            except TimeoutError as e:
+                raise ToolError(f"timed out: command '{command}' did not complete in {timeout} seconds")
+            except Exception as e:
+                raise ToolError(f"Failed to execute command: {str(e)}")
         #如果没有传入 command 参数，抛出 ToolError 异常，提示没有提供命令
         raise ToolError("no command provided.")
 
+    async def cleanup(self):
+        """清理沙箱资源"""
+        if self._client:
+            await self._client.cleanup()
+            self._client = None
 
 if __name__ == "__main__":
     # 该脚本作为主程序运行
