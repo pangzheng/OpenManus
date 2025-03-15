@@ -8,12 +8,13 @@ async def main():
     agent = Manus()
     while True:
         try:
-            prompt = input("Enter your prompt (or 'exit' to quit): ")
-            # 输入 exit 退出
-            if prompt.lower() == "exit":
+            prompt = input("Enter your prompt (or 'exit'/'quit' to quit): ")
+            prompt_lower = prompt.lower()
+            if prompt_lower in ["exit", "quit"]:
                 logger.info("Goodbye!")
                 break
-            if prompt.strip().isspace():
+
+            if not prompt.strip():
                 logger.warning("Skipping empty prompt.")
                 continue
             logger.info(f"Processing your request prompt: {prompt}...")
