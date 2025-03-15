@@ -1,6 +1,4 @@
-<p align="left">
-    中文&nbsp ｜ &nbsp<a href="README.md">English</a>&nbsp
-</p>
+[English](README.md) | [繁體中文](README_tw.md) | 简体中文
 
 <p align="left">
     <a href="https://discord.gg/6dn7Sa3a"><img src="https://dcbadge.vercel.app/api/server/DYn29wFk9z?style=flat" alt="Discord Follow"></a>
