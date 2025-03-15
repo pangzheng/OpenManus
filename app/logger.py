@@ -15,7 +15,7 @@ def define_log_level(print_level="INFO", logfile_level="DEBUG", name: str = None
 
     # 获取当前的日期和时间
     current_date = datetime.now()
-    formatted_date = current_date.strftime("%Y%m%d")
+    formatted_date = current_date.strftime("%Y%m%d%H%M%S")
     # 根据是否传入name参数，生成日志文件名。如果传入name，则格式为"name_YYYYMMDD"，否则为"YYYYMMDD"
     log_name = (
         f"{name}_{formatted_date}" if name else formatted_date
